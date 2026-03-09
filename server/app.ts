@@ -2,7 +2,7 @@
 import express, { Request, Response, NextFunction } from 'express';
 import dotenv from 'dotenv';
 import path from 'path';
-import cors from 'cors';
+import cors, { CorsOptions, CorsRequest } from 'cors';
 import cookieParser from "cookie-parser";
 
 
@@ -30,10 +30,24 @@ const app = express();
 app.use(express.json());
 
 // parse JSON bodies
-const corsOptions = {
-  origin: 'http://localhost:3000', // Explicitly allow the client origin
-  credentials: true,               // Essential for allowing cookies/auth headers
-  optionsSuccessStatus: 200        // Some legacy browsers (IE11, various SmartTVs) choke on 204
+
+
+const allowedOrigins = [
+  'http://localhost:3000',
+  'https://myfrontend.vercel.app',
+];
+
+const corsOptions: CorsOptions = {
+  origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
+    if (!origin) return callback(null, true); // allow non-browser requests (like Postman)
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  optionsSuccessStatus: 200,
 };
 
 app.use(cors(corsOptions));
