@@ -34,7 +34,7 @@ app.use(express.json());
 
 const allowedOrigins = [
   'http://localhost:3000',
-  'https://myfrontend.vercel.app',
+  'https://truce-frontend.vercel.app',
 ];
 
 const corsOptions: CorsOptions = {
