@@ -35,7 +35,7 @@ const corsOptions: CorsOptions = {
 
     const allowed =
       allowedOrigins.includes(origin) ||
-      origin.endsWith(".trucelofficiel.shop") ||
+      origin.endsWith("trucelofficiel.shop") ||
       origin.includes("vercel.app");
 
     if (allowed) {
