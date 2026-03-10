@@ -20,6 +20,16 @@ Local Connecton  */
 
 
 
+const pool = mysql.createPool({
+  uri: process.env.DB_URL,
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
+});
+
+export default pool;
+
+{/* 
 
 if (!process.env.MYSQLHOST || !process.env.MYSQLUSER || !process.env.MYSQLPASSWORD || !process.env.MYSQLDATABASE) {
   throw new Error('Database env vars are missing!');
@@ -40,3 +50,4 @@ const pool = mysql.createPool({
 console.log('✅ MySQL pool created successfully!');
 
 export default pool;
+*/}
