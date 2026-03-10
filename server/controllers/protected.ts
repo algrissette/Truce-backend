@@ -33,19 +33,17 @@ export const logout = (req: Request, res: Response) => {
     // Clear the truceCookieName cookie
     res.clearCookie("truceCookieName", {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      secure: true,
+      sameSite: "none",
       path: "/",
     });
 
-    // Clear the userId cookie
     res.clearCookie("userId", {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      httpOnly: false,
+      secure: true,
+      sameSite: "none",
       path: "/",
     });
-
     return res.status(200).json({
       message: "Logged out successfully",
       success: true,
