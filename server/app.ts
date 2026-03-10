@@ -35,7 +35,9 @@ app.use(express.json());
 const allowedOrigins = [
   'http://localhost:3000',
   'https://truce-frontend.vercel.app',
+  'https://trucelofficiel.shop',
   'https://www.trucelofficiel.shop'
+
 
 ];
 
