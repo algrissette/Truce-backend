@@ -1,37 +1,27 @@
-
 import express, { Request, Response, NextFunction } from 'express';
 import dotenv from 'dotenv';
 import path from 'path';
-import cors, { CorsOptions, CorsRequest } from 'cors';
+import cors, { CorsOptions } from 'cors';
 import cookieParser from "cookie-parser";
-
-
-
 
 // Load environment variables
 dotenv.config();
 
-console.log("🔥 Server starting"); // this will now appear clearly
+console.log("🔥 Server starting");
 
-
-// Import your user routes
+// Import your routes
 import userRoutes from './routes/users';
-import protectedRoutes from './routes/protected'
-import shopify from './routes/shopify'
-
-import products from './routes/products'
-
-import cart from "./routes/cart"
+import protectedRoutes from './routes/protected';
+import shopify from './routes/shopify';
+import products from './routes/products';
+import cart from "./routes/cart";
 
 // Create Express app
 const app = express();
 
-// Middleware
-app.use(express.json());
-
-// parse JSON bodies
-
-
+// -----------------------------------------------
+// 1. CORS — must be first, before everything else
+// -----------------------------------------------
 const allowedOrigins = [
   "http://localhost:3000",
   "https://truce-frontend.vercel.app",
@@ -59,40 +49,56 @@ const corsOptions: CorsOptions = {
 };
 
 app.use(cors(corsOptions));
+app.options("*", cors(corsOptions)); // handle preflight OPTIONS requests
 
-// Log requests (optional)
+// -----------------------------------------------
+// 2. Body parsers
+// -----------------------------------------------
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+
+// -----------------------------------------------
+// 3. Request logger
+// -----------------------------------------------
 app.use((req: Request, res: Response, next: NextFunction) => {
   console.log(`${req.method} ${req.url}`);
   next();
 });
 
-app.use(cookieParser())
-
-// Routes
-app.use('/protected', protectedRoutes)
+// -----------------------------------------------
+// 4. Routes
+// -----------------------------------------------
+app.use('/protected', protectedRoutes);
 app.use('/users', userRoutes);
-app.use('/products', products)
-app.use('/shopify', shopify)
-app.use("/cart", cart)
+app.use('/products', products);
+app.use('/shopify', shopify);
+app.use("/cart", cart);
 
-
-// Optional: serve static files
+// -----------------------------------------------
+// 5. Static files
+// -----------------------------------------------
 app.use(express.static(path.join(__dirname, 'public')));
 
-// 404 handler
+// -----------------------------------------------
+// 6. 404 handler
+// -----------------------------------------------
 app.use((req: Request, res: Response) => {
   res.status(404).json({ error: 'Not found' });
 });
 
-// Global error handler
+// -----------------------------------------------
+// 7. Global error handler
+// -----------------------------------------------
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   console.error(err.stack);
   res.status(500).json({ error: 'Something went wrong!' });
 });
 
-// Start server
+// -----------------------------------------------
+// 8. Start server
+// -----------------------------------------------
 const PORT: number = parseInt(process.env.PORT || '4000', 10);
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
-console.log("heyyy")
