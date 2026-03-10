@@ -33,21 +33,25 @@ app.use(express.json());
 
 
 const allowedOrigins = [
-  'http://localhost:3000',
-  'https://truce-frontend.vercel.app',
-  'https://trucelofficiel.shop',
-  'https://www.trucelofficiel.shop'
-
-
+  "http://localhost:3000",
+  "https://truce-frontend.vercel.app",
+  "https://trucelofficiel.shop",
+  "https://www.trucelofficiel.shop",
 ];
 
 const corsOptions: CorsOptions = {
-  origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
-    if (!origin) return callback(null, true); // allow non-browser requests (like Postman)
-    if (allowedOrigins.includes(origin)) {
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true);
+
+    const allowed =
+      allowedOrigins.includes(origin) ||
+      origin.endsWith(".trucelofficiel.shop") ||
+      origin.includes("vercel.app");
+
+    if (allowed) {
       callback(null, true);
     } else {
-      callback(new Error('Not allowed by CORS'));
+      callback(new Error("Not allowed by CORS"));
     }
   },
   credentials: true,
